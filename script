@@ -1,5 +1,7 @@
-javac ./components/Board.java
+#!/bin/bash
+javac ./components/Board.java 
+echo "Board.java ok"
 javac ./components/Pice.java
-
-
+echo "Pice.java ok"
 javac ./Checkers.java
+echo "Checkers.java ok"
