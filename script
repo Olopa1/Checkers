@@ -1,0 +1,5 @@
+javac ./components/Board.java
+javac ./components/Pice.java
+
+
+javac ./Checkers.java

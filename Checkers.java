@@ -1,8 +1,8 @@
-
+import components.*;
 
 public class Checkers {
     public static void main(String[] args) {
-        System.out.println("Działa");
-    }
-    
+        Board board = new Board();
+        board.printBoardCosnosle();
+    };
 }
