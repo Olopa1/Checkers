@@ -6,26 +6,31 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 public class Board {
     private JFrame mainFrame;
     private final int[][] boardPlacment;
-    private ArrayList<JButton> buttons;
+    private TreeMap<Point,JButton> buttons;
     private static final String[] LETTERS_IN_BOARD = {"A","B","C","D","E","F","G","H"};
     private ArrayList<Pice> whitePices;
     private ArrayList<Pice> blackPices;   
 
+    public JFrame getBoardFrame(){
+        return this.mainFrame;
+    }
+
     public Board()throws FileNotFoundException{
         this.mainFrame = new JFrame();
         this.boardPlacment = new int[8][8];
-        buttons = new ArrayList<JButton>();
+        buttons = new TreeMap<Point,JButton>();
         whitePices = new ArrayList<Pice>();
         blackPices = new ArrayList<Pice>();
         for(int height = 0; height < 8;height++){
             for(int width = 0; width < 8; width++){
                 this.boardPlacment[height][width] = 0;
                 JButton tempButton = new JButton("Height:" + Integer.toString(height + 1)+ " Width:" + LETTERS_IN_BOARD[width]);
-                this.buttons.add(tempButton);
+                this.buttons.put(new Point(width, height),tempButton);
                 this.mainFrame.add(tempButton);
             }
         }
@@ -60,7 +65,7 @@ public class Board {
                             String numbers[] = temp[iterator].split(",");
                             int height = Integer.parseInt(numbers[0]);
                             int width = Integer.parseInt(numbers[1]);
-                            whitePices.add(new Pice(width, height, 'b'));
+                            blackPices.add(new Pice(width, height, 'b'));
                         }
                     }
                     else{
@@ -78,6 +83,14 @@ public class Board {
         }
         this.mainFrame.setLayout(new GridLayout(8,8));
         this.mainFrame.setSize(1000,1000);
+    }
+
+    public void drawPices(){
+        for(Point key : this.buttons.keySet()){
+            if(whitePices.contains(key)){
+
+            }
+        }
     }
 
     public void displayBoard(){

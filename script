@@ -1,4 +1,6 @@
 #!/bin/bash
+javac ./components/Point.java
+echo "Point.java ok"
 javac ./components/Board.java 
 echo "Board.java ok"
 javac ./components/Pice.java
