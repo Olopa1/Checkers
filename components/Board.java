@@ -2,9 +2,10 @@ package components;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.TreeMap;
 
@@ -13,8 +14,8 @@ public class Board {
     private final int[][] boardPlacment;
     private TreeMap<Point,JButton> buttons;
     private static final String[] LETTERS_IN_BOARD = {"A","B","C","D","E","F","G","H"};
-    private ArrayList<Pice> whitePices;
-    private ArrayList<Pice> blackPices;   
+    private TreeMap<Point,Pice> whitePices;
+    private TreeMap<Point,Pice> blackPices;   
 
     public JFrame getBoardFrame(){
         return this.mainFrame;
@@ -23,14 +24,28 @@ public class Board {
     public Board()throws FileNotFoundException{
         this.mainFrame = new JFrame();
         this.boardPlacment = new int[8][8];
-        buttons = new TreeMap<Point,JButton>();
-        whitePices = new ArrayList<Pice>();
-        blackPices = new ArrayList<Pice>();
+        buttons = new TreeMap<>();
+        whitePices = new TreeMap<>();
+        blackPices = new TreeMap<>();
         for(int height = 0; height < 8;height++){
             for(int width = 0; width < 8; width++){
                 this.boardPlacment[height][width] = 0;
                 JButton tempButton = new JButton("Height:" + Integer.toString(height + 1)+ " Width:" + LETTERS_IN_BOARD[width]);
-                this.buttons.put(new Point(width, height),tempButton);
+                Point tempPoint = new Point(width, height);
+                this.buttons.put(tempPoint,tempButton);
+                this.buttons.get(tempPoint).addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e){
+                        JButton tempButton;
+                        Point currPoint;
+                        for(Point key : buttons.keySet()){
+                            if(this.equals(buttons.get(key))){
+                                tempButton = this;
+
+                            }
+                        }
+                    }
+                });
                 this.mainFrame.add(tempButton);
             }
         }
@@ -56,8 +71,12 @@ public class Board {
                             String numbers[] = temp[iterator].split(",");
                             int height = Integer.parseInt(numbers[0]);
                             int width = Integer.parseInt(numbers[1]);
-                            whitePices.add(new Pice(width, height, 'w'));
-                        }
+                            Point tempPoint = new Point(width, height);
+                            whitePices.put(tempPoint,new Pice(width, height, 'w'));
+                            System.out.println("szer:" +width + " wys:" + height);
+                            //this.buttons.get(tempPoint).setBackground(Color.WHITE);
+                            //this.buttons.get(tempPoint).setOpaque(true);
+                        } 
                     }
                     else if(currPices.compareTo("black:") == 0){
                         String temp[] = readLine.split(";");
@@ -65,7 +84,11 @@ public class Board {
                             String numbers[] = temp[iterator].split(",");
                             int height = Integer.parseInt(numbers[0]);
                             int width = Integer.parseInt(numbers[1]);
-                            blackPices.add(new Pice(width, height, 'b'));
+                            Point tempPoint = new Point(width, height);
+                            blackPices.put(tempPoint,new Pice(width, height, 'b'));
+                            System.out.println("szer:" +width + " wys:" + height);
+                            //this.buttons.get(tempPoint).setBackground(Color.BLACK);
+                            //this.buttons.get(tempPoint).setOpaque(true);
                         }
                     }
                     else{
@@ -87,9 +110,23 @@ public class Board {
 
     public void drawPices(){
         for(Point key : this.buttons.keySet()){
-            if(whitePices.contains(key)){
-
+            if(whitePices.containsKey(key)){
+                this.buttons.get(key).setBackground(Color.WHITE);
+                this.buttons.get(key).setOpaque(true);
+                //System.out.println(key);
             }
+            else if(blackPices.containsKey(key)){
+                this.buttons.get(key).setBackground(Color.BLACK);    
+                this.buttons.get(key).setOpaque(true);
+                //System.out.println(key);
+            }
+        }
+    }
+
+    public void refreshBoard(){
+        for(Point key : this.buttons.keySet()){
+            this.buttons.get(key).setBackground(Color.GRAY);
+            this.buttons.get(key).setOpaque(true);
         }
     }
 
@@ -104,6 +141,10 @@ public class Board {
             }
             System.out.println("");
         }
+    }
+
+    public void gameLoop(){
+
     }
 
 }

@@ -1,27 +1,28 @@
 package components;
 
 public class Pice {
-    private int fieldWidthPosition;
-    private int fieldHeightPosition;
+    private Point position;
     private char collor;
 
 
     public Pice(int startPositionWidth, int startPositionHeight,char collor){
-        this.fieldHeightPosition = startPositionHeight;
-        this.fieldWidthPosition = startPositionWidth;
+        this.position = new Point(startPositionWidth, startPositionHeight);
         this.collor = collor;
     }
 
+    public Point getPosition(){
+        return position;
+    }
+
     public Boolean movePices(int moveHeight, int moveWidth){
-        int tryMoveWidth = this.fieldWidthPosition + moveWidth;
-        int tryMoveHeight = this.fieldHeightPosition + moveHeight;
+        int tryMoveWidth = this.position.getWidth() + moveWidth;
+        int tryMoveHeight = this.position.getHeight() + moveHeight;
         if(tryMoveHeight > 7 || tryMoveHeight < 0)
             return false;
         if(tryMoveWidth > 7 || tryMoveHeight < 0)
             return false;
         
-        this.fieldHeightPosition = tryMoveHeight;
-        this.fieldWidthPosition = tryMoveWidth;
+        this.position.changePoint(tryMoveWidth, tryMoveHeight);
         return true;
     }
 

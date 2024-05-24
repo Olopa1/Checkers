@@ -17,11 +17,17 @@ public class Point implements Comparable<Point>{
         return this.height;
     }
 
+    public void changePoint(int newWidth,int newHeight){
+        this.height = newHeight;
+        this.width = newWidth;
+    }
+
     @Override
     public int compareTo(Point o) {
-        if(this.width == o.getWidth() && this.height == o.getHeight()){
-            return 0;
+        int widthComparison = Integer.compare(this.width, o.width);
+        if (widthComparison != 0) {
+            return widthComparison;
         }
-        return 1;
+        return Integer.compare(this.height, o.height);
     }
 }

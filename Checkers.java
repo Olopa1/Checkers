@@ -8,6 +8,9 @@ public class Checkers {
         Board board = new Board();
         board.printBoardCosnosle();
         board.displayBoard();
+        board.refreshBoard();
+        board.drawPices();
+        
         }
         catch(FileNotFoundException e){
             throw e;
