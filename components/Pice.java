@@ -14,6 +14,14 @@ public class Pice {
         return position;
     }
 
+    public char getCollor(){
+        return collor;
+    }
+
+    public void setPosition(Point newPoint){
+        this.position = newPoint;
+    }
+
     public Boolean movePices(int moveHeight, int moveWidth){
         int tryMoveWidth = this.position.getWidth() + moveWidth;
         int tryMoveHeight = this.position.getHeight() + moveHeight;

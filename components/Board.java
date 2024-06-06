@@ -15,7 +15,10 @@ public class Board {
     private TreeMap<Point,JButton> buttons;
     private static final String[] LETTERS_IN_BOARD = {"A","B","C","D","E","F","G","H"};
     private TreeMap<Point,Pice> whitePices;
-    private TreeMap<Point,Pice> blackPices;   
+    private TreeMap<Point,Pice> blackPices;
+
+    private Point firstClickedPoint = null;
+    private char firstClickedPointCollor = 0;
 
     public JFrame getBoardFrame(){
         return this.mainFrame;
@@ -36,13 +39,16 @@ public class Board {
                 this.buttons.get(tempPoint).addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e){
-                        JButton tempButton;
-                        Point currPoint;
+                        JButton tempButton = (JButton) e.getSource();
+                        Point currPoint = null;
                         for(Point key : buttons.keySet()){
-                            if(this.equals(buttons.get(key))){
-                                tempButton = this;
-
+                            if(buttons.get(key) == tempButton){
+                                currPoint = key;
+                                break;
                             }
+                        }
+                        if(currPoint != null){
+                            changeColors(tempPoint);
                         }
                     }
                 });
@@ -72,10 +78,8 @@ public class Board {
                             int height = Integer.parseInt(numbers[0]);
                             int width = Integer.parseInt(numbers[1]);
                             Point tempPoint = new Point(width, height);
-                            whitePices.put(tempPoint,new Pice(width, height, 'w'));
-                            System.out.println("szer:" +width + " wys:" + height);
-                            //this.buttons.get(tempPoint).setBackground(Color.WHITE);
-                            //this.buttons.get(tempPoint).setOpaque(true);
+                            this.whitePices.put(tempPoint,new Pice(width, height, 'w'));
+                            //System.out.println("białe szer:" +width + " wys:" + height);
                         } 
                     }
                     else if(currPices.compareTo("black:") == 0){
@@ -85,10 +89,8 @@ public class Board {
                             int height = Integer.parseInt(numbers[0]);
                             int width = Integer.parseInt(numbers[1]);
                             Point tempPoint = new Point(width, height);
-                            blackPices.put(tempPoint,new Pice(width, height, 'b'));
-                            System.out.println("szer:" +width + " wys:" + height);
-                            //this.buttons.get(tempPoint).setBackground(Color.BLACK);
-                            //this.buttons.get(tempPoint).setOpaque(true);
+                            this.blackPices.put(tempPoint,new Pice(width, height, 'b'));
+                            //System.out.println("czarne szer:" +width + " wys:" + height);
                         }
                     }
                     else{
@@ -113,12 +115,10 @@ public class Board {
             if(whitePices.containsKey(key)){
                 this.buttons.get(key).setBackground(Color.WHITE);
                 this.buttons.get(key).setOpaque(true);
-                //System.out.println(key);
             }
             else if(blackPices.containsKey(key)){
                 this.buttons.get(key).setBackground(Color.BLACK);    
                 this.buttons.get(key).setOpaque(true);
-                //System.out.println(key);
             }
         }
     }
@@ -128,6 +128,7 @@ public class Board {
             this.buttons.get(key).setBackground(Color.GRAY);
             this.buttons.get(key).setOpaque(true);
         }
+        this.drawPices();
     }
 
     public void displayBoard(){
@@ -143,8 +144,60 @@ public class Board {
         }
     }
 
-    public void gameLoop(){
+    public void changeColors(Point point){
+        Pice currPice = null;
+        System.out.println("Kliknięto : wys: " + point.getHeight() + " szer: " + point.getWidth());
+        if(firstClickedPoint == null){
+            
+            if (whitePices.containsKey(point)) {
+                currPice = whitePices.get(point);
+            }
+            else if (blackPices.containsKey(point)) {
+                currPice = blackPices.get(point);
+            }
 
+            //currPice = blackPices.containsKey(point) ? blackPices.get(point) : null;    
+            //currPice = whitePices.containsKey(point) ? whitePices.get(point) : null;
+            
+            if(currPice == null){
+                firstClickedPoint = null;
+                firstClickedPointCollor = 0;
+                return;
+            }
+            firstClickedPoint = point;
+            firstClickedPointCollor = currPice.getCollor();
+        }
+        else{
+            if(firstClickedPointCollor == 'w'){
+                int differencesInHeights = firstClickedPoint.getHeight() - point.getHeight();
+                int differencesInWidth = firstClickedPoint.getWidth() - point.getWidth();
+                differencesInWidth = differencesInWidth < 0 ? differencesInWidth * -1 : differencesInWidth;
+                if(differencesInHeights == 1 && differencesInWidth == 1){
+                    whitePices.put(point, whitePices.get(firstClickedPoint));
+                    whitePices.remove(firstClickedPoint);
+                }
+                System.out.println("białe");
+            
+            }
+            else if(firstClickedPointCollor == 'b'){
+                int differencesInHeights = firstClickedPoint.getHeight() - point.getHeight();
+                int differencesInWidth = firstClickedPoint.getWidth() - point.getWidth();
+                differencesInWidth = differencesInWidth < 0 ? differencesInWidth * -1 : differencesInWidth;
+                if(differencesInHeights == -1 && differencesInWidth == 1){
+                    blackPices.put(point, blackPices.get(firstClickedPoint));
+                    blackPices.remove(firstClickedPoint);
+                }
+                System.out.println("czarne");
+            }
+            this.refreshBoard();
+            firstClickedPoint = null;
+            firstClickedPointCollor = 0;
+        }
+
+    }
+
+    public void gameLoop(){
+        //TODO
     }
 
 }
