@@ -144,6 +144,20 @@ public class Board {
         }
     }
 
+    public boolean checkForBeating(){
+        if(firstClickedPointCollor != 0){
+            if(firstClickedPointCollor == 'w'){
+                for(Point key : whitePices.keySet()){
+                    
+                }
+            }
+            else if(firstClickedPointCollor == 'b'){
+
+            }
+        }
+        return false;
+    }
+
     public void changeColors(Point point){
         Pice currPice = null;
         System.out.println("Kliknięto : wys: " + point.getHeight() + " szer: " + point.getWidth());
@@ -156,9 +170,6 @@ public class Board {
                 currPice = blackPices.get(point);
             }
 
-            //currPice = blackPices.containsKey(point) ? blackPices.get(point) : null;    
-            //currPice = whitePices.containsKey(point) ? whitePices.get(point) : null;
-            
             if(currPice == null){
                 firstClickedPoint = null;
                 firstClickedPointCollor = 0;
