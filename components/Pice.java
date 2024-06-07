@@ -8,6 +8,7 @@ public class Pice {
     public Pice(int startPositionWidth, int startPositionHeight,char collor){
         this.position = new Point(startPositionWidth, startPositionHeight);
         this.collor = collor;
+        this.type = PiceType.CHECKER;
     }
 
     public PiceType getType(){
