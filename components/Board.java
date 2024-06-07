@@ -144,15 +144,40 @@ public class Board {
         }
     }
 
-    public boolean checkForBeating(){
-        if(firstClickedPointCollor != 0){
+    public boolean checkForBeating(Point point,int sideOfBeating){
+        /*
+             * If sideOfBeating is positive it means it is right
+             * If sideOfBeating is negative it means it is left
+        */
+        Point foundEqual = null;
+        Point nextPoint;
+        if(firstClickedPointCollor != 0){    
             if(firstClickedPointCollor == 'w'){
-                for(Point key : whitePices.keySet()){
-                    
+                if(!blackPices.containsKey(point) || whitePices.containsKey(point)){
+                    return false;       
                 }
+                //What is this ??????
+                //for(Point key : whitePices.keySet()){
+                //    if(key == point){
+                //        foundEqual = key;
+                //        break;
+                //    }
+                //}
+                nextPoint = new Point(point.getWidth() + sideOfBeating , point.getHeight() + 1);
+                if(blackPices.containsKey(nextPoint) || whitePices.containsKey(nextPoint) || !buttons.containsKey(nextPoint)){
+                    return false;
+                }
+                return true;
             }
             else if(firstClickedPointCollor == 'b'){
-
+                if(blackPices.containsKey(point) || !whitePices.containsKey(point)){
+                    return false;       
+                }
+                nextPoint = new Point(point.getWidth() + sideOfBeating , point.getHeight() - 1);
+                if(blackPices.containsKey(nextPoint) || whitePices.containsKey(nextPoint) || !buttons.containsKey(nextPoint)){
+                    return false;
+                }
+                return true;
             }
         }
         return false;
@@ -182,10 +207,21 @@ public class Board {
             if(firstClickedPointCollor == 'w'){
                 int differencesInHeights = firstClickedPoint.getHeight() - point.getHeight();
                 int differencesInWidth = firstClickedPoint.getWidth() - point.getWidth();
+                int sideOfBeating = differencesInWidth;
                 differencesInWidth = differencesInWidth < 0 ? differencesInWidth * -1 : differencesInWidth;
                 if(differencesInHeights == 1 && differencesInWidth == 1){
                     whitePices.put(point, whitePices.get(firstClickedPoint));
+                    if(blackPices.containsKey(point) && checkForBeating(point, sideOfBeating)){
+                        blackPices.remove(point);
+                        whitePices.put(new Point(point.getWidth() + sideOfBeating,point.getHeight() + 1), whitePices.get(point));
+                        whitePices.remove(point);
+                    }
+                    else if(whitePices.containsKey(point)){
+                        whitePices.remove(point); 
+                    }
+                    
                     whitePices.remove(firstClickedPoint);
+                    
                 }
                 System.out.println("białe");
             
@@ -193,6 +229,7 @@ public class Board {
             else if(firstClickedPointCollor == 'b'){
                 int differencesInHeights = firstClickedPoint.getHeight() - point.getHeight();
                 int differencesInWidth = firstClickedPoint.getWidth() - point.getWidth();
+                int sideOfBeating = differencesInWidth;
                 differencesInWidth = differencesInWidth < 0 ? differencesInWidth * -1 : differencesInWidth;
                 if(differencesInHeights == -1 && differencesInWidth == 1){
                     blackPices.put(point, blackPices.get(firstClickedPoint));
