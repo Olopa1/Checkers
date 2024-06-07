@@ -13,7 +13,7 @@ public class Board {
     private JFrame mainFrame;
     private final int[][] boardPlacment;
     private TreeMap<Point,JButton> buttons;
-    //private static final String[] LETTERS_IN_BOARD = {"A","B","C","D","E","F","G","H"};
+    private static final String[] LETTERS_IN_BOARD = {"A","B","C","D","E","F","G","H"};
     private TreeMap<Point,Pice> whitePices;
     private TreeMap<Point,Pice> blackPices;
 
@@ -35,7 +35,8 @@ public class Board {
         for(int height = 0; height < 8;height++){
             for(int width = 0; width < 8; width++){
                 this.boardPlacment[height][width] = 0;
-                JButton tempButton = new JButton(/*"Height:" + Integer.toString(height + 1)+ " Width:" + LETTERS_IN_BOARD[width]*/);
+                //JButton tempButton = new JButton("Height:" + Integer.toString(height + 1)+ " Width:" + LETTERS_IN_BOARD[width]);
+                JButton tempButton = new JButton();
                 Point tempPoint = new Point(width, height);
                 this.buttons.put(tempPoint,tempButton);
                 this.buttons.get(tempPoint).addActionListener(new ActionListener() {
@@ -116,6 +117,7 @@ public class Board {
         for(Point key : this.buttons.keySet()){
             if(whitePices.containsKey(key)){
                 if(this.whitePices.get(key).getType() == PiceType.QUEEN){
+                    this.buttons.get(key).setForeground(Color.black);
                     this.buttons.get(key).setText("Q");
                 }
                 this.buttons.get(key).setBackground(Color.WHITE);
@@ -188,12 +190,14 @@ public class Board {
         boolean moveDone = false;
         Point newPointAfterMove = null;
         char color = picesToMove.get(firstClickedPoint).getCollor();
+        int heightOfBeating = color == 'w' ? -1 : +1;
         if(picesToMove.get(firstClickedPoint).getType() == PiceType.CHECKER){
+            //System.out.println("Jest pion");
             if(differencesInHeights == 1 && differencesInWidth == 1){
                 if(picesThatWaits.containsKey(point) && checkForBeating(point, sideOfBeating)){
                     picesToMove.put(point, picesToMove.get(firstClickedPoint));
                     picesThatWaits.remove(point);
-                    newPointAfterMove = new Point(point.getWidth() - sideOfBeating,point.getHeight() - 1);
+                    newPointAfterMove = new Point(point.getWidth() - sideOfBeating,point.getHeight() + heightOfBeating);
                     picesToMove.put(newPointAfterMove, picesToMove.get(point));
                     picesToMove.remove(point);
                     picesToMove.remove(firstClickedPoint);
@@ -207,12 +211,12 @@ public class Board {
                 }
                 if(moveDone){
                     if(color == 'w'){
-                        if(newPointAfterMove.getHeight() == 7){
+                        if(newPointAfterMove.getHeight() == 0){
                             picesToMove.get(newPointAfterMove).setType(PiceType.QUEEN);
                         }
                     }
                     else if(color == 'b'){
-                        if(newPointAfterMove.getHeight() == 0){
+                        if(newPointAfterMove.getHeight() == 7){
                             picesToMove.get(newPointAfterMove).setType(PiceType.QUEEN);
                         }
                     }
@@ -221,10 +225,11 @@ public class Board {
         }
         else if(picesToMove.get(firstClickedPoint).getType() == PiceType.QUEEN){
             if(differencesInHeights == differencesInWidth){
+                //System.out.println("Jest damka");
                 if(picesThatWaits.containsKey(point) && checkForBeating(point, sideOfBeating)){
                     picesToMove.put(point, picesToMove.get(firstClickedPoint));
                     picesThatWaits.remove(point);
-                    newPointAfterMove = new Point(point.getWidth() - sideOfBeating,point.getHeight() - 1);
+                    newPointAfterMove = new Point(point.getWidth() - sideOfBeating,point.getHeight() + heightOfBeating);
                     picesToMove.put(newPointAfterMove, picesToMove.get(point));
                     picesToMove.remove(point);
                     picesToMove.remove(firstClickedPoint);
@@ -264,6 +269,7 @@ public class Board {
             int differencesInHeights = firstClickedPoint.getHeight() - point.getHeight();
             int differencesInWidth = firstClickedPoint.getWidth() - point.getWidth();
             int sideOfBeating = differencesInWidth;
+            differencesInHeights = differencesInHeights < 0 ? differencesInHeights * -1 : differencesInHeights;
             differencesInWidth = differencesInWidth < 0 ? differencesInWidth * -1 : differencesInWidth;
                 
             if(firstClickedPointCollor == 'w'){
