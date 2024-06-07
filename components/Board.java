@@ -187,6 +187,7 @@ public class Board {
     public void makeMove(TreeMap<Point,Pice> picesToMove, TreeMap<Point,Pice> picesThatWaits,int differencesInHeights,int differencesInWidth,int sideOfBeating, Point point){
         boolean moveDone = false;
         Point newPointAfterMove = null;
+        char color = picesToMove.get(firstClickedPoint).getCollor();
         if(picesToMove.get(firstClickedPoint).getType() == PiceType.CHECKER){
             if(differencesInHeights == 1 && differencesInWidth == 1){
                 if(picesThatWaits.containsKey(point) && checkForBeating(point, sideOfBeating)){
@@ -205,8 +206,15 @@ public class Board {
                     moveDone = true;
                 }
                 if(moveDone){
-                    if(newPointAfterMove.getHeight() == 7){
-                        picesToMove.get(newPointAfterMove).setType(PiceType.QUEEN);
+                    if(color == 'w'){
+                        if(newPointAfterMove.getHeight() == 7){
+                            picesToMove.get(newPointAfterMove).setType(PiceType.QUEEN);
+                        }
+                    }
+                    else if(color == 'b'){
+                        if(newPointAfterMove.getHeight() == 0){
+                            picesToMove.get(newPointAfterMove).setType(PiceType.QUEEN);
+                        }
                     }
                 }
             }
@@ -227,11 +235,6 @@ public class Board {
                     newPointAfterMove = point;
                     picesToMove.remove(firstClickedPoint);
                     moveDone = true;
-                }
-                if(moveDone){
-                    if(newPointAfterMove.getHeight() == 7){
-                        picesToMove.get(newPointAfterMove).setType(PiceType.QUEEN);
-                    }
                 }
             }
         }
@@ -267,29 +270,7 @@ public class Board {
                 makeMove(whitePices, blackPices, differencesInHeights, differencesInWidth, sideOfBeating, point);
             }
             else if(firstClickedPointCollor == 'b'){
-                /*if(blackPices.get(firstClickedPoint).getType() == PiceType.CHECKER){
-                    if(differencesInHeights == -1 && differencesInWidth == 1){
-                        if(whitePices.containsKey(point) && checkForBeating(point, sideOfBeating)){
-                            blackPices.put(point, blackPices.get(firstClickedPoint));
-                            whitePices.remove(point);
-                            newPointAfterMove = new Point(point.getWidth() - sideOfBeating,point.getHeight() + 1); 
-                            blackPices.put(newPointAfterMove, whitePices.get(point));
-                            blackPices.remove(point);
-                            blackPices.remove(firstClickedPoint);
-                            moveDone = true;
-                        }
-                        else if(!blackPices.containsKey(point) && !whitePices.containsKey(point)){
-                            blackPices.put(point, blackPices.get(firstClickedPoint));
-                            blackPices.remove(firstClickedPoint);
-                            moveDone = true;
-                        }
-                        if(moveDone){
-                            if(newPointAfterMove.getHeight() == 0){
-                                blackPices.get(newPointAfterMove).setType(PiceType.QUEEN);
-                            }
-                        }
-                    }*/
-                } 
+                makeMove(blackPices, whitePices, differencesInHeights, differencesInWidth, sideOfBeating, point);
             }
             this.refreshBoard();
             firstClickedPoint = null;
