@@ -3,11 +3,15 @@ package components;
 public class Pice {
     private Point position;
     private char collor;
-
+    private PiceType type;
 
     public Pice(int startPositionWidth, int startPositionHeight,char collor){
         this.position = new Point(startPositionWidth, startPositionHeight);
         this.collor = collor;
+    }
+
+    public PiceType getType(){
+        return type;
     }
 
     public Point getPosition(){
@@ -22,16 +26,12 @@ public class Pice {
         this.position = newPoint;
     }
 
-    public Boolean movePices(int moveHeight, int moveWidth){
-        int tryMoveWidth = this.position.getWidth() + moveWidth;
-        int tryMoveHeight = this.position.getHeight() + moveHeight;
-        if(tryMoveHeight > 7 || tryMoveHeight < 0)
-            return false;
-        if(tryMoveWidth > 7 || tryMoveHeight < 0)
-            return false;
-        
-        this.position.changePoint(tryMoveWidth, tryMoveHeight);
-        return true;
+    public void setType(PiceType type){
+        this.type = type;
+    }
+
+    public void movePices(Point newPoint){
+        this.position = newPoint;
     }
 
 

@@ -7,3 +7,5 @@ javac ./components/Pice.java
 echo "Pice.java ok"
 javac ./Checkers.java
 echo "Checkers.java ok"
+javac ./components/PiceType.java
+echo "PiceType.java ok"

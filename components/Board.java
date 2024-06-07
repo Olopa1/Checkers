@@ -20,6 +20,8 @@ public class Board {
     private Point firstClickedPoint = null;
     private char firstClickedPointCollor = 0;
 
+    private char currentPlayer = 'w';
+
     public JFrame getBoardFrame(){
         return this.mainFrame;
     }
@@ -33,7 +35,7 @@ public class Board {
         for(int height = 0; height < 8;height++){
             for(int width = 0; width < 8; width++){
                 this.boardPlacment[height][width] = 0;
-                JButton tempButton = new JButton("Height:" + Integer.toString(height + 1)+ " Width:" + LETTERS_IN_BOARD[width]);
+                JButton tempButton = new JButton(/*"Height:" + Integer.toString(height + 1)+ " Width:" + LETTERS_IN_BOARD[width]*/);
                 Point tempPoint = new Point(width, height);
                 this.buttons.put(tempPoint,tempButton);
                 this.buttons.get(tempPoint).addActionListener(new ActionListener() {
@@ -149,32 +151,30 @@ public class Board {
              * If sideOfBeating is positive it means it is right
              * If sideOfBeating is negative it means it is left
         */
-        Point foundEqual = null;
+        //Point foundEqual = null;
         Point nextPoint;
         if(firstClickedPointCollor != 0){    
             if(firstClickedPointCollor == 'w'){
                 if(!blackPices.containsKey(point) || whitePices.containsKey(point)){
+                    System.out.println("Zwraca false 1");
                     return false;       
                 }
-                //What is this ??????
-                //for(Point key : whitePices.keySet()){
-                //    if(key == point){
-                //        foundEqual = key;
-                //        break;
-                //    }
-                //}
-                nextPoint = new Point(point.getWidth() + sideOfBeating , point.getHeight() + 1);
+                nextPoint = new Point(point.getWidth() - sideOfBeating , point.getHeight() - 1);
                 if(blackPices.containsKey(nextPoint) || whitePices.containsKey(nextPoint) || !buttons.containsKey(nextPoint)){
+                    System.out.println("Punkt: wys:" + nextPoint.getHeight() + " szer:" + nextPoint.getWidth());
+                    System.out.println("Zwraca false 2");
                     return false;
                 }
                 return true;
             }
             else if(firstClickedPointCollor == 'b'){
                 if(blackPices.containsKey(point) || !whitePices.containsKey(point)){
+                    System.out.println("Zwraca false 3");
                     return false;       
                 }
-                nextPoint = new Point(point.getWidth() + sideOfBeating , point.getHeight() - 1);
+                nextPoint = new Point(point.getWidth() - sideOfBeating , point.getHeight() + 1);
                 if(blackPices.containsKey(nextPoint) || whitePices.containsKey(nextPoint) || !buttons.containsKey(nextPoint)){
+                    System.out.println("Zwraca false 4");
                     return false;
                 }
                 return true;
@@ -210,18 +210,17 @@ public class Board {
                 int sideOfBeating = differencesInWidth;
                 differencesInWidth = differencesInWidth < 0 ? differencesInWidth * -1 : differencesInWidth;
                 if(differencesInHeights == 1 && differencesInWidth == 1){
-                    whitePices.put(point, whitePices.get(firstClickedPoint));
                     if(blackPices.containsKey(point) && checkForBeating(point, sideOfBeating)){
+                        whitePices.put(point, whitePices.get(firstClickedPoint));
                         blackPices.remove(point);
-                        whitePices.put(new Point(point.getWidth() + sideOfBeating,point.getHeight() + 1), whitePices.get(point));
+                        whitePices.put(new Point(point.getWidth() - sideOfBeating,point.getHeight() - 1), whitePices.get(point));
                         whitePices.remove(point);
+                        whitePices.remove(firstClickedPoint);
                     }
-                    else if(whitePices.containsKey(point)){
-                        whitePices.remove(point); 
+                    else if(!blackPices.containsKey(point) && !whitePices.containsKey(point)){
+                        whitePices.put(point, whitePices.get(firstClickedPoint));
+                        whitePices.remove(firstClickedPoint);
                     }
-                    
-                    whitePices.remove(firstClickedPoint);
-                    
                 }
                 System.out.println("białe");
             
@@ -232,8 +231,17 @@ public class Board {
                 int sideOfBeating = differencesInWidth;
                 differencesInWidth = differencesInWidth < 0 ? differencesInWidth * -1 : differencesInWidth;
                 if(differencesInHeights == -1 && differencesInWidth == 1){
-                    blackPices.put(point, blackPices.get(firstClickedPoint));
-                    blackPices.remove(firstClickedPoint);
+                    if(whitePices.containsKey(point) && checkForBeating(point, sideOfBeating)){
+                        blackPices.put(point, blackPices.get(firstClickedPoint));
+                        whitePices.remove(point);
+                        blackPices.put(new Point(point.getWidth() - sideOfBeating,point.getHeight() + 1), whitePices.get(point));
+                        blackPices.remove(point);
+                        blackPices.remove(firstClickedPoint);
+                    }
+                    else if(!blackPices.containsKey(point) && !whitePices.containsKey(point)){
+                        blackPices.put(point, blackPices.get(firstClickedPoint));
+                        blackPices.remove(firstClickedPoint);
+                    }
                 }
                 System.out.println("czarne");
             }
