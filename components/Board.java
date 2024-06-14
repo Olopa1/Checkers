@@ -409,7 +409,7 @@ public class Board {
 
     public void gameLoop() {
         while (true) {
-            if (checkWinCondition()) {
+            if (this.checkWinCondition()) {
                 JOptionPane.showMessageDialog(mainFrame, "Gracz " + (currentPlayer == 'w' ? "biały" : "czarny") + " wygrał!");
                 resetTimers();
                 break;
